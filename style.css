@@ -1,0 +1,77 @@
+body{
+	background:#282626;
+}
+.GameButton{
+	width:50px;
+	height:50px;
+	border:1px solid grey;
+	background:#363131;
+	font-size:35px;
+}
+#GameMenu{
+	text-align:center;
+}
+.HomeButton{
+	width:150px;
+	height:50px;
+	margin:12px;
+	font-size:25px;
+	background:#363131;
+	border-radius:10px;
+	color:#FFFFAC;
+	color:#D3D3D3;
+	border:none;
+}
+#room_details{
+	display:flex;
+	justify-content:center;
+	align-items:center;
+	flex-direction:column;
+}
+#room_details h3{
+	color:#D3D3D3;
+	display:block;
+}
+
+#ButtonContainer{
+	display:grid;
+	grid-template-columns:repeat(3,1fr);
+	gap:0px;
+	width:150px;
+}
+#footer-container{
+	position:fixed;
+	bottom:0;
+	width:100%;
+	display:flex;
+	justify-content:center;
+	align-items:center;
+}
+#footer{
+	font-size:16px;
+	color:grey
+}
+#footer a{
+	color:#2832c2;
+	color: #5271ff;
+}
+.NeonRed{
+	color: #e74c3c;
+}
+.NeonBlue{
+	color: #5271ff;
+}
+#GameContainer{
+	display:flex;
+	margin:35px;
+	justify-content:center;
+}
+#GameText h3{
+	color:#D3D3D3;
+}
+#GameText{
+	text-align: center;
+}
+#room_details{
+
+}
