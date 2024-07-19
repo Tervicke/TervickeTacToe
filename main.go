@@ -8,7 +8,7 @@ import (
 	"math/rand"
 	"net/http"
 	"strconv"
-
+	"os"
 	"github.com/olahol/melody"
 )
 
@@ -282,7 +282,14 @@ func main(){
 
 		}
 	})
-	http.ListenAndServe(":5000",nil);
+	port := os.Getenv("PORT");
+	if port == ""{
+		port = "5000"
+	}
+	err := http.ListenAndServe(":"+port,nil);
+	if err != nil{
+		log.Fatal(err);
+	}
 }
 func checkForWin(gameBoard [9]string) (bool,string) {
 	winningLines := [][]int{
