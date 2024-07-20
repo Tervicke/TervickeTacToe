@@ -41,7 +41,6 @@ connectWebSocket();
 
 function HandleMessages(event){
 	data = JSON.parse(event.data);
-	console.log(data)
 	if(data.EVENT == "ROOM CONNECTED"){
 		room_id_text = document.createElement("h3");
 		if("ROOM_ID" in data ){
