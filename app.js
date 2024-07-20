@@ -41,6 +41,7 @@ connectWebSocket();
 
 function HandleMessages(event){
 	data = JSON.parse(event.data);
+	console.log(data);
 	if(data.EVENT == "ROOM CONNECTED"){
 		room_id_text = document.createElement("h3");
 		if("ROOM_ID" in data ){
@@ -163,7 +164,7 @@ function showGameScreen(){
 function ButtonClick(event){
 	if(event.target.innerHTML == ''){
 		data = {
-			"EVENT":"GAME",
+			"EVENT":"GAMEMOVE",
 			"MOVE":event.target.id
 		}
 		socket.send(JSON.stringify(data));

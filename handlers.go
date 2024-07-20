@@ -47,6 +47,14 @@ func HandleMessage(s *melody.Session , msg []byte ){
 			if event == "CREATE-ROOM"{
 				handleCreateEvent(s,client);
 			}
+
+			if event ==  "JOIN-ROOM"{
+				handleJoinEvent(data["ROOM_ID"].(string) , s );
+			}
+			
+			if event == "GAMEMOVE"{
+				handleGameMoveEvent(data["MOVE"].(string) , s);
+			}
 				
 		}
 }

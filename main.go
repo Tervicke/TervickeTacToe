@@ -2,11 +2,9 @@ package main
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"log"
 	"net/http"
-	"strconv"
 	"os"
 	"github.com/olahol/melody"
 )
@@ -53,7 +51,7 @@ func main(){
 	m.HandleDisconnect(HandleDisconnect)
 
 	m.HandleMessage(func(s *melody.Session, msg []byte) {
-		
+		//HandleMessage(s,msg[] byte)	
 		var data map[string]interface{}
 
 		err := json.Unmarshal(msg,&data)
@@ -66,7 +64,7 @@ func main(){
 			client,err:= GetClientById(s.Request.RemoteAddr);
 
 			if err != nil {
-				log.Fatal("%v",err);
+				log.Printf("%v",err);
 			}
 
 			if(event == "CREATE-ROOM"){
@@ -77,33 +75,13 @@ func main(){
 
 			if(event == "JOIN-ROOM"){
 
-				if room_id,ok := data["ROOM_ID"]; ok{
-					fmt.Println(room_id);
-					room,err := addToRoom(room_id.(string),s) ;
-					updateClientSymbol(s.Request.RemoteAddr,"x");
-					if err != nil{
-						s.Write([]byte("NO ROOM FOUND"));
-						return;
-					}
-					fmt.Printf("2nd User connected to the room");
-					fmt.Println(room.id);
-					fmt.Println("The two players now are");
-					fmt.Println(room.player1.Id);
-					fmt.Println(room.player2.Id);
-					data := map[string]string{
-						"MESSAGE":"PLAYER 2 CONNECTED",
-					};
-					JSONData,_ := json.Marshal(data);
-					sendMessageToClient(room.player1.Id,JSONData);
-					data = map[string]string{
-						"MESSAGE":"ROOM CONNECTED",
-					};
-					JSONData,_ = json.Marshal(data);
-					sendMessageToClient(room.player2.Id,JSONData);
-				}
+				handleJoinEvent(data["ROOM_ID"].(string) , s );
+
 			}
 		
-			if event == "GAME"{
+			if event == "GAMEMOVE"{
+				handleGameMoveEvent(data["MOVE"].(string),s);
+				/*
 				fmt.Println("event recieved");
 
 				if move,ok := data["MOVE"].(string); ok{ //get the position
@@ -236,7 +214,7 @@ func main(){
 					}
 
 				}
-
+				*/
 			}
 
 		}
@@ -288,14 +266,6 @@ func printAllClients(){
 	}
 
 }
-func GetRoom(id string) (*Room,error){
-	for i,r := range Rooms{
-		if r.player1.Id == id || r.player2.Id == id{
-			return &Rooms[i],nil;
-		}
-	}
-	return nil,errors.New("ROOM NOT FOUND !");
-}
 
 func sendMessageToClient(remoteAddr string, message []byte) {
 	if session, ok := sessions[remoteAddr]; ok {
@@ -305,23 +275,7 @@ func sendMessageToClient(remoteAddr string, message []byte) {
 	}
 }
 
-func addToRoom(id string , s *melody.Session) (*Room,error){
-	client, err := GetClientById(s.Request.RemoteAddr)
-    if err != nil {
-        return nil, err // Return an error if the client was not found
-  }
-	for i,room := range Rooms{
-		if room.id == id && room.player2 == nil{
 
-			room.player2 = client;
-			Rooms[i] = room;
-
-			return &Rooms[i],nil;
-
-		}
-	}
-	return nil,errors.New("ROOM NOT FOUND");
-}
 
 
 /*

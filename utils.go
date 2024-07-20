@@ -4,10 +4,10 @@ import (
 	"encoding/json"
 	"log"
 
-	"github.com/olahol/melody"
 )
 
-func sendJSONMessage(s *melody.Session , eventType string , data map[string]string ){
+func sendJSONMessage(client_id string , eventType string , data map[string]string ){
+	s := sessions[client_id];
 	data["EVENT"] = eventType;
 	message,err := json.Marshal(data);
 	if err != nil {
@@ -17,3 +17,4 @@ func sendJSONMessage(s *melody.Session , eventType string , data map[string]stri
 		log.Printf("%v",err);
 	}
 }
+
