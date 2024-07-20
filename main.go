@@ -47,6 +47,9 @@ func main(){
 
 	m := melody.New();
 	sessions = make(map[string]*melody.Session)
+	http.HandleFunc("/ping",func(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprintf(w,"Pong");
+	});
 
 	http.HandleFunc("/ws",func(w http.ResponseWriter, r *http.Request) {
 		m.HandleRequest(w,r);
@@ -290,6 +293,7 @@ func main(){
 	if err != nil{
 		log.Fatal(err);
 	}
+	fmt.Printf("Server running on %s",port);
 }
 func checkForWin(gameBoard [9]string) (bool,string) {
 	winningLines := [][]int{
