@@ -229,35 +229,7 @@ func main(){
 	}
 	fmt.Printf("Server running on %s",port);
 }
-func checkForWin(gameBoard [9]string) (bool,string) {
-	winningLines := [][]int{
-        {0, 1, 2}, // Row 1
-        {3, 4, 5}, // Row 2
-        {6, 7, 8}, // Row 3
-        {0, 3, 6}, // Column 1
-        {1, 4, 7}, // Column 2
-        {2, 5, 8}, // Column 3
-        {0, 4, 8}, // Main diagonal
-        {2, 4, 6}, // Anti-diagonal
-    };
-		for _, line := range winningLines {
-			if gameBoard[line[0]] != "" &&
-			 gameBoard[line[0]] == gameBoard[line[1]] &&
-			 gameBoard[line[1]] == gameBoard[line[2]] {
-				return true, gameBoard[line[0]];
-			}
-    }
-		return false,"";
-}
 
-func checkForDraw(gameboard [9]string) (bool) {
-	for _,cell := range gameboard{
-		if cell == ""{
-			return false;
-		}
-	}
-	return true;
-}
 
 func printAllClients(){
 
