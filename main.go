@@ -29,6 +29,8 @@ type Room struct{
 	gameBoard [9]string; 
 	current string;
 	gameover bool;
+	player1replay bool;
+	player2replay bool;
 }
 
 
@@ -83,6 +85,10 @@ func main(){
 
 				handleGameMoveEvent(data["MOVE"].(string),s);
 
+			}
+
+			if event == "REPLAY"{
+				HandleReplay(s);
 			}
 
 		}

@@ -162,3 +162,44 @@ func checkForWin(gameBoard [9]string) (bool,string) {
     }
 		return false,"";
 }
+func HandleReplay( s *melody.Session ){
+	room,err := GetRoomByClientId(s.Request.RemoteAddr);
+	if err != nil {
+		log.Printf("%v",err);
+	}
+	if room.player1.Id == s.Request.RemoteAddr{
+		room.player1replay = true;
+	}
+
+	if room.player2.Id == s.Request.RemoteAddr{
+		room.player2replay = true;
+	}
+
+	if room.player1replay && room.player2replay {
+		restartGame(room);
+	}
+
+}
+func restartGame(room *Room){
+	room.current = getRandomSymbol();
+
+	//clear the array
+	clearStringArray(&room.gameBoard);
+
+	room.player1replay = false;
+	room.player2replay = false;
+	
+	room.gameover = false;
+
+	data := map[string]string{};
+	
+	sendJSONMessage(room.player1.Id,"RESTART",data);
+	sendJSONMessage(room.player2.Id,"RESTART",data);
+}
+
+
+func clearStringArray(arr *[9]string) {
+    for i := range arr {
+        arr[i] = ""
+    }
+}
