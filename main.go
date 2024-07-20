@@ -5,7 +5,6 @@ import (
 	"errors"
 	"fmt"
 	"log"
-	"math/rand"
 	"net/http"
 	"strconv"
 	"os"
@@ -17,6 +16,7 @@ var (
 	Users []Client;
 	Rooms []Room;
 	m *melody.Session;
+	sessions map[string]*melody.Session;
 )
 
 type Client struct{
@@ -33,15 +33,6 @@ type Room struct{
 	gameover bool;
 }
 
-func GetClientById(Id string) (*Client,error) {
-	for _,user := range Users {
-		if user.Id == Id{
-			return &user,nil;
-		}
-	}
-	return nil,errors.New("Client not found");
-}
-var sessions map[string]*melody.Session;
 
 func main(){
 
@@ -55,31 +46,14 @@ func main(){
 		m.HandleRequest(w,r);
 	});
 
-	//handle the connection
-	m.HandleConnect(func(s *melody.Session) {
-		
-		sessions[s.Request.RemoteAddr] = s	
-		Users = append(Users,Client{Id:s.Request.RemoteAddr} );	
-		fmt.Println(s.Request.RemoteAddr, " Client connected")
-
-	})
+	//handle the connect
+	m.HandleConnect(HandleConnect);
 
 	//handle the disconnect	
-	m.HandleDisconnect(func(s *melody.Session) {
-
-		for i,c := range Users{
-			if c.Id == s.Request.RemoteAddr{
-				Users = append(Users[:i],Users...);
-				fmt.Println("Client Disconnected");
-				delete(sessions,s.Request.RemoteAddr);
-				break;
-			}
-		}
-		
-	})
+	m.HandleDisconnect(HandleDisconnect)
 
 	m.HandleMessage(func(s *melody.Session, msg []byte) {
-
+		
 		var data map[string]interface{}
 
 		err := json.Unmarshal(msg,&data)
@@ -91,31 +65,13 @@ func main(){
 		if event,ok := data["EVENT"]; ok{
 			client,err:= GetClientById(s.Request.RemoteAddr);
 
+			if err != nil {
+				log.Fatal("%v",err);
+			}
 
 			if(event == "CREATE-ROOM"){
 
-				updateClientSymbol(client.Id ,"o");
-
-				if err != nil{
-					log.Print("Error occured while trying to fetch the user");
-					return;
-				}
-				room := Room{
-					id: randomString(),
-					player1:client,
-					player2: nil,
-					current: "o",
-				};
-				Rooms = append(Rooms,room);
-				fmt.Println("New Room created with the ID",room.id)
-
-				data := map[string]string{
-					"MESSAGE":"ROOM CONNECTED",
-					"ROOM_ID": room.id,
-				};
-
-				roomIDJSON, _:= json.Marshal(data)
-				s.Write(roomIDJSON);
+				handleCreateEvent(s,client);
 
 			}
 
@@ -366,22 +322,7 @@ func addToRoom(id string , s *melody.Session) (*Room,error){
 	}
 	return nil,errors.New("ROOM NOT FOUND");
 }
-func updateClientSymbol(id string , symbol string){
-	for i,user := range Users{
-		if user.Id == id{
-				user.symbol = symbol
-				Users[i] = user;
-		}
-	}
-}
-func randomString() string {
-	const charset = "0123456789"
-	b := make([]byte, 4)
-	for i := range b {
-		b[i] = charset[rand.Intn(len(charset))]
-	}
-	return string(b)
-}
+
 
 /*
 {

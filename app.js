@@ -5,8 +5,8 @@ const maxReconnectAttempts = 10;
 const reconnectInterval = 3000;
 
 function connectWebSocket(){
-	socket = new WebSocket("wss://tervicketactoe.onrender.com/ws");
-	//socket = new WebSocket("ws://localhost:5000/ws")
+	//socket = new WebSocket("wss://tervicketactoe.onrender.com/ws");
+	socket = new WebSocket("ws://localhost:5000/ws")
 	
 	socket.onopen = function(){
 		console.log("Socket is now open");
@@ -41,8 +41,7 @@ connectWebSocket();
 
 function HandleMessages(event){
 	data = JSON.parse(event.data);
-
-	if(data.MESSAGE == "ROOM CONNECTED"){
+	if(data.EVENT == "ROOM CONNECTED"){
 		room_id_text = document.createElement("h3");
 		if("ROOM_ID" in data ){
 			room_id_text.innerHTML = "Room id is " + data.ROOM_ID; 
@@ -59,12 +58,12 @@ function HandleMessages(event){
 		hideHomeScreen();
 	}
 
-	if(data.MESSAGE == "PLAYER 2 CONNECTED"){
+	if(data.EVENT == "PLAYER 2 CONNECTED"){
 		removeRoomDetails();
 		showGameScreen();
 	}
 
-	if(data.MESSAGE == "GAMEMOVE"){
+	if(data.EVENT == "GAMEMOVE"){
 		pos = data["POSITION"]
 		symbol = data["SYMBOL"]
 		var button = document.getElementById(pos);
@@ -76,7 +75,7 @@ function HandleMessages(event){
 		button.innerHTML = symbol;
 	}
 
-	if(data.MESSAGE == "GAMEOVER"){
+	if(data.EVENT == "GAMEOVER"){
 		if(data["RESULT"] == "DRAW"){
 			Display("Draw !!")
 		}else{
