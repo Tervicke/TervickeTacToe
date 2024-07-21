@@ -5,11 +5,30 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <script src="app.js"></script>
+
+    <div id="GameMenu">
+      <button class="HomeButton" onclick="CreateEvent()">Create</button>
+      <button class="HomeButton" onclick="JoinEvent()">Join</button>
+    </div>
+
+    <div id="GameContainer">
+      <div id="ButtonContainer"></div>
+    </div>
+
+
+    <div id="GameText">
+      <h3 id="result"></h3>
+			<button class="HomeButton" onclick="HandleReplay()" id="ReplayButton">PlayAgain</button>
+    </div>
+
     <div id="footer-container">
       <p id="footer">
-        Made with <span class="NeonRed"> &#9829; </span> by <a style="text-decoration: None" href="https://tervicke.netlify.app/">Tervicke</a>
+        Made with <span class="NeonRed"> &#9829; </span> by
+        <a style="text-decoration: None" href="https://tervicke.netlify.app/">Tervicke</a>
       </p>
+      <script src="frontend/web.js"></script>
+      <script src="frontend/events.js"></script>
+      <script src="frontend/app.js"></script>
     </div>
   </body>
 </html>

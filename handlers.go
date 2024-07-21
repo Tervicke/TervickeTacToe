@@ -16,8 +16,16 @@ func HandleConnect(s *melody.Session){
 
 }
 func HandleDisconnect(s *melody.Session){
+
+	id := s.Request.RemoteAddr;
+	for i,room := range Rooms{
+		if room.player1.Id == id || room.player2.Id == id{
+			sendExitMessage(&Rooms[i]);
+			Rooms = append(Rooms[:i], Rooms[i+1:]...)
+		}
+	}
 		for i,c := range Users{
-			if c.Id == s.Request.RemoteAddr{
+			if c.Id == id{
 				Users = append(Users[:i],Users...);
 				fmt.Println("Client Disconnected");
 				delete(sessions,s.Request.RemoteAddr);
@@ -25,7 +33,14 @@ func HandleDisconnect(s *melody.Session){
 			}
 		}
 }
-
+func sendExitMessage(room *Room){ 
+	fmt.Println("---------------------------");
+	fmt.Println(room.player1);
+	fmt.Println(room.player1);
+	sendJSONMessage(room.player1.Id,"EXIT",map[string]string{});
+	sendJSONMessage(room.player2.Id,"EXIT",map[string]string{});
+	fmt.Println("---------------------------");
+}
 func HandleMessage(s *melody.Session , msg []byte ){
 	
 		var data map[string]interface{};
@@ -55,6 +70,12 @@ func HandleMessage(s *melody.Session , msg []byte ){
 			if event == "GAMEMOVE"{
 				handleGameMoveEvent(data["MOVE"].(string) , s);
 			}
+
+			if event == "REPLAY"{
+				HandleReplay(s);
+			}
+
 				
 		}
 }
+

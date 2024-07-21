@@ -63,6 +63,7 @@ func handleGameMoveEvent(move string , s *melody.Session) {
 	win,winner := checkForWin(room.gameBoard);
 	if( win ){
 		declareWinner(room , winner);
+		return;
 	}
 
 	if (checkForDraw(room.gameBoard) ){
@@ -77,22 +78,27 @@ func handleGameMoveEvent(move string , s *melody.Session) {
 
 func declareWinner(room *Room , winner string){
 	room.gameover = true;
+
 	Wdata := map[string]string{
 		"RESULT":"WIN",
 	}
 	Ldata := map[string]string{
 		"RESULT":"LOSE",
 	}
-	
-	if room.player1.symbol == winner{
+
+	log.Printf("Winner is %s",winner);
+
+	player1,_ := GetClientById(room.player1.Id)
+	player2,_ := GetClientById(room.player2.Id)
+
+	if  player1.symbol == winner{
 		sendJSONMessage(room.player1.Id , "GAMEOVER" , Wdata);
 		sendJSONMessage(room.player2.Id , "GAMEOVER" , Ldata);
-	}else{
+	}
+	if player2.symbol == winner{
 		sendJSONMessage(room.player2.Id , "GAMEOVER" , Wdata);
 		sendJSONMessage(room.player1.Id , "GAMEOVER" , Ldata);
 	}
-	
-	log.Println("Draw Declared");
 
 }
 
@@ -161,4 +167,45 @@ func checkForWin(gameBoard [9]string) (bool,string) {
 			}
     }
 		return false,"";
+}
+func HandleReplay( s *melody.Session ){
+	room,err := GetRoomByClientId(s.Request.RemoteAddr);
+	if err != nil {
+		log.Printf("%v",err);
+	}
+	if room.player1.Id == s.Request.RemoteAddr{
+		room.player1replay = true;
+	}
+
+	if room.player2.Id == s.Request.RemoteAddr{
+		room.player2replay = true;
+	}
+
+	if room.player1replay && room.player2replay {
+		restartGame(room);
+	}
+
+}
+func restartGame(room *Room){
+	room.current = getRandomSymbol();
+
+	//clear the array
+	clearStringArray(&room.gameBoard);
+
+	room.player1replay = false;
+	room.player2replay = false;
+	
+	room.gameover = false;
+
+	data := map[string]string{};
+	
+	sendJSONMessage(room.player1.Id,"RESTART",data);
+	sendJSONMessage(room.player2.Id,"RESTART",data);
+}
+
+
+func clearStringArray(arr *[9]string) {
+    for i := range arr {
+        arr[i] = ""
+    }
 }

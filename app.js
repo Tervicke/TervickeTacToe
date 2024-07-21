@@ -5,8 +5,8 @@ const maxReconnectAttempts = 10;
 const reconnectInterval = 3000;
 
 function connectWebSocket(){
-	socket = new WebSocket("wss://tervicketactoe.onrender.com/ws");
-	//socket = new WebSocket("ws://localhost:5000/ws")
+	//socket = new WebSocket("wss://tervicketactoe.onrender.com/ws");
+	socket = new WebSocket("ws://localhost:5000/ws")
 	
 	socket.onopen = function(){
 		console.log("Socket is now open");
@@ -40,6 +40,7 @@ function attemptReconnect(){
 connectWebSocket();
 
 function HandleMessages(event){
+	console.log(data)
 	data = JSON.parse(event.data);
 	if(data.EVENT == "ROOM CONNECTED"){
 		room_id_text = document.createElement("h3");
@@ -85,10 +86,43 @@ function HandleMessages(event){
 				Display("**U LOSE**");
 			}
 		}
+		showReplayButton();
+	}
+
+	if(data.EVENT == "EXIT"){
+		showHomeScreen();
+		hideGameScreen();
+	}
+	console.log("fkdjal")
+	if(data.EVENT == "RESTART"){
+		resetGame();
 	}
 
 }
+function resetGame(){
+	var buttons = document.getElementById("ButtonContainer").children;
+	Array.from(buttons).forEach(function(button) {
+    button.innerHTML = "";
+		button.classList.remove("NeonRed");
+		button.classList.remove("NeonBlue");
+	});
+	removeDisplay();
+	removeReplayButton();
+}
 
+function showReplayButton(){
+	var replayButton = document.createElement("button");
+	replayButton.id = "ReplayButton";
+	replayButton.innerHTML = "Play Again";
+	replayButton.classList.add("HomeButton")
+	replayButton.addEventListener("click", HandleReplay)
+	var container = document.getElementById("GameText");
+	if(!container){
+		container = document.createElement("div");
+		container.classList.add("GameText");
+	}
+	container.appendChild(replayButton);
+}
 function removeRoomDetails(){
 	var container = document.getElementById("room_details")
 	while(container.firstChild){
@@ -99,7 +133,18 @@ function Display(textstring){
 	var container = document.getElementById("GameText");
 	var text = document.createElement("h3");
 	text.innerHTML = textstring
+	if(!container){
+		container = document.createElement("div");
+		container.classList.add("GameText");
+	}	
 	container.appendChild(text);
+}
+function removeDisplay(){
+	var container = document.getElementById("GameText");
+	container.remove()
+}
+function removeReplayButton(){
+	document.getElementById("ReplayButton").remove();
 }
 
 function hideHomeScreen(){
@@ -160,6 +205,10 @@ function showGameScreen(){
 	document.body.appendChild(GameText);
 }
 
+function hideGameScreen(){
+	document.getElementById("GameText").remove();
+	document.getElementById("GameContainer").remove();
+}
 function ButtonClick(event){
 	if(event.target.innerHTML == ''){
 		data = {
@@ -169,4 +218,12 @@ function ButtonClick(event){
 		socket.send(JSON.stringify(data));
 		console.log("data sent");
 	}
+}
+
+function HandleReplay(){
+		data = {
+			"EVENT":"REPLAY",
+		}
+		socket.send(JSON.stringify(data));
+		console.log("data sent");
 }

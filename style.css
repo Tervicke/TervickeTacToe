@@ -70,8 +70,12 @@ body{
 	color:#D3D3D3;
 }
 #GameText{
-	text-align: center;
+	display:flex;	
+	flex-direction: column;
+	justify-content:center;
+	align-items: center;
 }
-#room_details{
+#ReplayButton{
+	display:None;
+}
 
-}
