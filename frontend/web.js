@@ -1,7 +1,4 @@
 let socket;
-let reconnectAttempts = 0;
-const maxReconnectAttempts = 4;
-const reconnectInterval = 3000;
 
 function connectWebSocket(){
 	socket = new WebSocket("wss://tervicketactoe.onrender.com/ws");
@@ -9,7 +6,6 @@ function connectWebSocket(){
 	
 	socket.onopen = function(){
 		console.log("Socket is now open");
-		reconnectAttempts = 0;
 	}
 
 	socket.onopen = function(){
@@ -19,21 +15,9 @@ function connectWebSocket(){
 	}
 
 	socket.onclose = function(){
-		console.log("socket was being closed restarted")
-		attemptReconnect();
+		console.log("socket closed")
 	}
 
 }
 
-function attemptReconnect(){
-	if (reconnectAttempts < maxReconnectAttempts) {
-        setTimeout(() => {
-            reconnectAttempts++;
-            console.log(`Reconnecting attempt ${reconnectAttempts}`);
-            connectWebSocket();
-        }, reconnectInterval);
-    } else {
-        console.log("Max reconnect attempts reached. Please check the server.");
-  }
-}
 

@@ -78,4 +78,12 @@ body{
 #ReplayButton{
 	display:None;
 }
-
+#Notif{
+	color:white;
+}
+#NotifContainer{
+	height:25px;
+	background: #e74c3c;
+	margin-bottom:10px;
+	display:None;
+}

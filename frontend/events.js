@@ -51,6 +51,11 @@ function HandleMessages(event){
 	if(data.EVENT == "EXIT"){
 		showHomeScreen();
 		hideGameScreen();
+		document.getElementById("NotifContainer").style.display = "block";
+		setTimeout(() => {
+		document.getElementById("NotifContainer").style.display = "None";
+		}, 1500); 
+
 	}
 	if(data.EVENT == "RESTART"){
 		resetGame();

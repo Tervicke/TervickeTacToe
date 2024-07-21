@@ -19,4 +19,3 @@ func updateClientSymbol(id string , symbol string){
 		}		
 	}
 }
-

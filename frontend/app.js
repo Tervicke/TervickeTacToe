@@ -42,7 +42,7 @@ function hideHomeScreen(){
 }
 
 function showHomeScreen(){
-	document.getElementById("GameMenu").display = "flex";
+	document.getElementById("GameMenu").style.display = "block";
 }
 function JoinEvent(){
 	let id = prompt("ENTER THE Room id")
@@ -74,8 +74,8 @@ function showGameScreen(){
 }
 
 function hideGameScreen(){
-	document.getElementById("GameText").remove();
-	document.getElementById("GameContainer").remove();
+	document.getElementById("GameText").style.display = "None";
+	document.getElementById("GameContainer").style.display = "None";
 }
 function ButtonClick(event){
 	if(event.target.innerHTML == ''){
