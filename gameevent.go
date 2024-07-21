@@ -77,17 +77,24 @@ func handleGameMoveEvent(move string , s *melody.Session) {
 
 func declareWinner(room *Room , winner string){
 	room.gameover = true;
+
 	Wdata := map[string]string{
 		"RESULT":"WIN",
 	}
 	Ldata := map[string]string{
 		"RESULT":"LOSE",
 	}
-	
-	if room.player1.symbol == winner{
+
+	log.Printf("Winner is %s",winner);
+
+	player1,_ := GetClientById(room.player1.Id)
+	player2,_ := GetClientById(room.player2.Id)
+
+	if  player1.symbol == winner{
 		sendJSONMessage(room.player1.Id , "GAMEOVER" , Wdata);
 		sendJSONMessage(room.player2.Id , "GAMEOVER" , Ldata);
-	}else{
+	}
+	if player2.symbol == winner{
 		sendJSONMessage(room.player2.Id , "GAMEOVER" , Wdata);
 		sendJSONMessage(room.player1.Id , "GAMEOVER" , Ldata);
 	}
