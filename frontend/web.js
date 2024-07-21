@@ -1,11 +1,11 @@
 let socket;
 let reconnectAttempts = 0;
-const maxReconnectAttempts = 10;
+const maxReconnectAttempts = 4;
 const reconnectInterval = 3000;
 
 function connectWebSocket(){
-	socket = new WebSocket("wss://tervicketactoe.onrender.com/ws");
-	//socket = new WebSocket("ws://localhost:5000/ws")
+	//socket = new WebSocket("wss://tervicketactoe.onrender.com/ws");
+	socket = new WebSocket("ws://localhost:5000/ws")
 	
 	socket.onopen = function(){
 		console.log("Socket is now open");
