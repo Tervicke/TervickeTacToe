@@ -97,11 +97,11 @@ func main(){
 	if port == ""{
 		port = "5000"
 	}
+	fmt.Printf("Server running on %s",port);
 	err := http.ListenAndServe(":"+port,nil);
 	if err != nil{
 		log.Fatal(err);
 	}
-	fmt.Printf("Server running on %s",port);
 }
 
 
