@@ -91,8 +91,6 @@ func declareWinner(room *Room , winner string){
 		sendJSONMessage(room.player2.Id , "GAMEOVER" , Wdata);
 		sendJSONMessage(room.player1.Id , "GAMEOVER" , Ldata);
 	}
-	
-	log.Println("Draw Declared");
 
 }
 
