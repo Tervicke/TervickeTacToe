@@ -63,6 +63,7 @@ func handleGameMoveEvent(move string , s *melody.Session) {
 	win,winner := checkForWin(room.gameBoard);
 	if( win ){
 		declareWinner(room , winner);
+		return;
 	}
 
 	if (checkForDraw(room.gameBoard) ){
