@@ -1,7 +1,8 @@
 let socket;
+import config from './config'
 
 function connectWebSocket(){
-	socket = new WebSocket("wss://tervicketactoe.onrender.com/ws");
+	const socket = new WebSocket(config.websocketUrl);
 	//socket = new WebSocket("ws://localhost:5000/ws")
 	
 	socket.onopen = function(){
