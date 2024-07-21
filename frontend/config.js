@@ -8,6 +8,6 @@ const config = {
     },
 };
 
-const environment = 'development'; 
+const environment = 'production'; 
 
 export default config[environment];
